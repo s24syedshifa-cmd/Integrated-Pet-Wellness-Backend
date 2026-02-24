@@ -25,6 +25,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // ✅ Whitelist all auth endpoints (register, login, OTP)
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/pets/**").permitAll()
                 // admin endpoints require ADMIN role
                 .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                 // all other endpoints require JWT
