@@ -1,12 +1,13 @@
 package com.pet.petbackend.service;
 
+import com.pet.petbackend.dto.UserResponse;
+import com.pet.petbackend.entity.User;
+import com.pet.petbackend.exception.ResourceNotFoundException;
+import com.pet.petbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import com.pet.petbackend.entity.User;
-import com.pet.petbackend.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -14,25 +15,34 @@ public class AdminService {
 
     private final UserRepository userRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
-    public String approveUser(Long id) {
-
+    public void approveUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setApproved(true);
         userRepository.save(user);
-
-        return "User approved successfully";
     }
 
-    public String deleteUser(Long id) {
-
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User not found");
+        }
         userRepository.deleteById(id);
+    }
 
-        return "User deleted successfully";
+    private UserResponse mapToResponse(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .approved(user.isApproved())
+                .build();
     }
 }

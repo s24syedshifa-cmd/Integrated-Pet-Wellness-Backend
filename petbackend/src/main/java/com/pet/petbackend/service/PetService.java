@@ -1,11 +1,16 @@
 package com.pet.petbackend.service;
 
 import com.pet.petbackend.entity.Pet;
+import com.pet.petbackend.exception.ResourceNotFoundException;
 import com.pet.petbackend.repository.PetRepository;
+import com.pet.petbackend.entity.User;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class PetService {
@@ -28,9 +33,15 @@ public class PetService {
 
     // Get Pet By Id
     public Pet getPetById(Long id) {
-        Optional<Pet> pet = petRepository.findById(id);
-        return pet.orElseThrow(() -> new RuntimeException("Pet not found with id: " + id));
-    }
+
+    User loggedUser = (User) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+    return petRepository.findByIdAndUserId(id, loggedUser.getId())
+            .orElseThrow(() -> new ResourceNotFoundException("Pet not found"));
+}
 
     // Delete Pet
     public void deletePet(Long id) {

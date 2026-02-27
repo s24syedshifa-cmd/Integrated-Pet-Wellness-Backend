@@ -3,6 +3,8 @@ package com.pet.petbackend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Entity
 @Table(name = "users")
@@ -23,6 +25,7 @@ public class User {
 
     private String password;
 
+    @Builder.Default
     private String role = "ROLE_USER";
 
     private boolean approved;
@@ -33,5 +36,9 @@ public class User {
 
     private LocalDateTime otpExpiry;
 
+    @Builder.Default
     private boolean firstLogin = true;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+private List<Pet> pets;
 }
