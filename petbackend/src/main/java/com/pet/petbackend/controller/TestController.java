@@ -1,12 +1,12 @@
 package com.pet.petbackend.controller;
-  // ⚠ Change to your package name
+  
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pet.petbackend.service.EmailService;  // ⚠ Change to your package name
+import com.pet.petbackend.service.EmailService;  
 
 @RestController
 @RequestMapping("/api/test")
@@ -19,10 +19,9 @@ public class TestController {
     public String sendMail() {
 
         emailService.sendEmail(
-                "receiveremail@gmail.com",   // change to your email
+                "receiveremail@gmail.com",   
                 "Test Mail",
-                "SMTP is working correctly"
-        );
+                "SMTP is working correctly");
 
         return "Email sent successfully";
     }

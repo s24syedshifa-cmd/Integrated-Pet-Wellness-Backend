@@ -1,45 +1,45 @@
 package com.pet.petbackend.entity;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import lombok.*;
-@Data
+import java.time.LocalDateTime;
+import java.util.List;
+
+
 @Entity
-@Getter
-@Setter
+@Table(name = "users")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Builder
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean verified=false;
     private String name;
 
     @Column(unique = true)
     private String email;
 
-@Column(name = "otp")
-private String otp;
-
-@Column(name = "otp_expiry")
-private LocalDateTime otpExpiry;
-
-@Column(name = "is_verified")
-private boolean isVerified =false;
-
     private String password;
 
-    private String role ="ROLE_USER"; // ADMIN or OWNER
+    @Builder.Default
+    private String role = "ROLE_USER";
 
-    private boolean approved = false;
+    private boolean approved;
 
-    private boolean emailVerified = false;
+    @Column(name = "email_verified")
+    private boolean verified;
 
+    private String otp;
+
+    private LocalDateTime otpExpiry;
+
+    @Builder.Default
     private boolean firstLogin = true;
 
-    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+private List<Pet> pets;
 }
