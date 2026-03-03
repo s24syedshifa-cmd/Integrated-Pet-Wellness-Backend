@@ -30,6 +30,7 @@ public class User {
 
     private boolean approved;
 
+    @Column(name = "email_verified")
     private boolean verified;
 
     private String otp;
